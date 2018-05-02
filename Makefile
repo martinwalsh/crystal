@@ -1,4 +1,3 @@
-EXERCISE ?= ""
 IGNOREDIRS := "^(\.git|.crystal|docs|bin|img|script)$$"
 EXERCISESDIR ?= "exercises"
 EXERCISES = $(shell find exercises -maxdepth 1 -mindepth 1 -type d | cut -d'/' -f2 | sort | grep -Ev $(IGNOREDIRS))
@@ -11,9 +10,12 @@ SPECFILE := "$(EXERCISENAME)_spec.$(FILEEXT)"
 SUPERSPECFILE := "$(SPECFILE).super"
 TMPSPECFILE := "$(SPECFILE).tmp"
 
-GENERATORDIR ?= "generator"
+GENERATORDIR ?= generator
+GENERATORBIN := $(GENERATORDIR)/bin
 GENERATORSDIR := $(GENERATORDIR)/src/generators
 GENERATORS = $(shell find $(GENERATORSDIR) -type f | cut -d '/' -f 4 | cut -d '.' -f 1 | sed 's/_/-/g')
+
+G_SRCS := $(shell find $(GENERATORDIR) -name "*.cr" -or -name "*.tt" | grep -Ev '(/lib/|/spec/)')
 
 test-exercise:
 	@echo "running formatting check for: $(EXERCISE)"
@@ -31,10 +33,15 @@ test-exercise:
 test-exercises:
 	@for exercise in $(EXERCISES); do EXERCISE=$$exercise $(MAKE) -s test-exercise || exit 1; done
 
-build-generator:
+$(GENERATORBIN):
+	mkdir -p $@
+
+$(GENERATORBIN)/generator: $(G_SRCS) | $(GENERATORBIN)
 	@crystal build $(GENERATORDIR)/generator.$(FILEEXT) -o generator/bin/generator
 
-generate-exercise:
+build-generator: $(GENERATORBIN)/generator
+
+generate-exercise: $(GENERATORBIN)/generator
 	@echo "generating spec file for generator: $(GENERATOR)"
 	@generator/bin/generator $(GENERATOR)
 
@@ -49,3 +56,15 @@ test:
 	@echo "running all the tests"
 	@$(MAKE) -s test-exercises
 	@$(MAKE) -s test-generator
+
+bin/configlet: bin/fetch-configlet
+	./bin/fetch-configlet
+
+ci: bin/configlet
+	./bin/configlet lint . || true  # FIXME: This fails locally for me. Is that expected?
+	$(MAKE) test
+
+clean:
+	rm -rf bin/configlet $(GENERATORDIR)/{.shards,bin,cache,lib}
+
+.PHONY: clean ci test test-generator build-generator test-exercise test-exercises generate-exercise generate-exercises
