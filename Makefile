@@ -65,6 +65,6 @@ ci: bin/configlet
 	$(MAKE) test
 
 clean:
-	rm -rf bin/configlet $(GENERATORDIR)/{.shards,bin,cache,lib}
+	rm -rf bin/configlet $(addprefix $(GENERATORDIR)/,.shards bin cache lib)
 
 .PHONY: clean ci test test-generator build-generator test-exercise test-exercises generate-exercise generate-exercises
