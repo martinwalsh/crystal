@@ -61,8 +61,8 @@ bin/configlet: bin/fetch-configlet
 	./bin/fetch-configlet
 
 ci: bin/configlet
-	./bin/configlet lint . || true  # FIXME: This fails locally for me. Is that expected?
-	$(MAKE) test
+	./bin/configlet lint . --track-id=crystal
+	$(MAKE) -s test
 
 clean:
 	rm -rf bin/configlet $(addprefix $(GENERATORDIR)/,.shards bin cache lib)
