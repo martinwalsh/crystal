@@ -34,7 +34,7 @@ test-exercises:
 	@for exercise in $(EXERCISES); do EXERCISE=$$exercise $(MAKE) -s test-exercise || exit 1; done
 
 $(GENERATORBIN):
-	mkdir -p $@
+	@mkdir -p $@
 
 $(GENERATORBIN)/generator: $(G_SRCS) | $(GENERATORBIN)
 	@crystal build $(GENERATORDIR)/generator.$(FILEEXT) -o generator/bin/generator

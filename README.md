@@ -6,14 +6,14 @@ Exercism problems in Crystal.
 
 ### All Exercises
 
-Run all Exercises with:
+Test all exercises with:
 ```bash
 $ make test-exercises
 ```
 
 ### Single Exercises
 
-Run single Exercises with:
+Test single exercises with:
 ```bash
 $ make test-exercise EXERCISE=exercise-name
 ```
@@ -45,13 +45,14 @@ $ crystal generator/generator.cr hello-world
 
 Or build a binary and use that:
 ```bash
-$ make build-generator
 $ make generate-exercise GENERATOR=hello-world
 ```
 
+NOTE: A binary version of the generator is built automatically when needed for a given make target, but you may build it manually at any time by running `make build-generator` (or rebuild it with `make clean build-generator`).
+
 ### Running (or Re-running) the Generator for All Exercises
 
-This can be used for refreshing the tests when changes are made to the x-common repo. Or for testing the full functionality of the test generator.
+This can be used for refreshing the tests when changes are made to the [problem-specifications](https://github.com/exercism/problem-specifications) repo. Or for testing the full functionality of the test generator.
 
 ```bash
 $ make generate-exercises
@@ -62,6 +63,14 @@ $ make generate-exercises
 ```bash
 $ make test-generator
 ```
+
+### Cleaning up
+
+```bash
+$ make clean
+```
+
+Use this command to delete any transient files and build artifacts. This is potentially useful for troubleshooting purposes as it will purge any stale cached files, rebuild the generator when needed and can be combined with other make targets (e.g. `make clean test`).
 
 ## Contributing Guide
 
