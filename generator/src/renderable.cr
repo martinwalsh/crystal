@@ -57,6 +57,8 @@ module Renderable
 
   # Provides a convenient indentation helper for nested ECR templates.
   def indent(indent_level : Int32 = 0)
-    to_s.split("\n").map { |line| "#{INDENT * indent_level}#{line}" }.join("\n").rstrip + delimiter
+    to_s.split("\n").map do |line|
+      line.strip.blank? ? "" : "#{INDENT * indent_level}#{line}"
+    end.join("\n").rstrip + delimiter
   end
 end
