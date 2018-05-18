@@ -1,38 +1,22 @@
-require "../exercise_generator"
-require "../exercise_test_case"
-require "json"
+require "../generator"
 
-class TriangleGenerator < ExerciseGenerator
-  def exercise_name
-    "triangle"
+class TriangleTestCase
+  class Input
+    JSON.mapping(sides: Array(Int32) | Array(Float64))
   end
 
-  def test_cases
-    cases = [] of TriangleTestCase
-    JSON.parse(data)["cases"].each do |category|
-      category["cases"].each do |test_case|
-        next if test_case["comments"]? # skip float cases
-        cases << TriangleTestCase.from_json(test_case.to_json)
-      end
+  include TestDSL
+  include Exercise::TestCase(Input, Bool)
+
+  def sides
+    input.sides.map_with_index do |n, i|
+      n.to_i == input.sides[i] ? n.to_i : n.to_f
     end
-    cases
   end
-end
 
-class TriangleTestCase < ExerciseTestCase
-
-  JSON.mapping(
-    description: String,
-    property: String,
-    sides: Array(Int32),
-    expected: Bool
-  )
-
-  def workload
+  _it description do
     "Triangle.new(#{sides}).#{property}?.should eq(#{expected})"
   end
-
-  def test_name
-    description
-  end
 end
+
+Generator.register :Triangle

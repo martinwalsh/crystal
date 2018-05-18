@@ -18,6 +18,10 @@ describe "Triangle" do
     Triangle.new([0, 0, 0]).equilateral?.should eq(false)
   end
 
+  pending "sides may be floats" do
+    Triangle.new([0.5, 0.5, 0.5]).equilateral?.should eq(true)
+  end
+
   pending "true if last two sides are equal" do
     Triangle.new([3, 4, 4]).isosceles?.should eq(true)
   end
@@ -42,6 +46,10 @@ describe "Triangle" do
     Triangle.new([1, 1, 3]).isosceles?.should eq(false)
   end
 
+  pending "sides may be floats" do
+    Triangle.new([0.5, 0.4, 0.5]).isosceles?.should eq(true)
+  end
+
   pending "true if no sides are equal" do
     Triangle.new([5, 4, 6]).scalene?.should eq(true)
   end
@@ -56,5 +64,9 @@ describe "Triangle" do
 
   pending "Sides that violate triangle inequality are not scalene, even if they are all different" do
     Triangle.new([7, 3, 2]).scalene?.should eq(false)
+  end
+
+  pending "sides may be floats" do
+    Triangle.new([0.5, 0.4, 0.6]).scalene?.should eq(true)
   end
 end

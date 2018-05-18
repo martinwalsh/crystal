@@ -1,7 +1,8 @@
 class Triangle
-  def initialize(sides)
-    @sides = sides
-    @sides = [] of Int32 if illegal?
+  alias Sides = Array(Int32) | Array(Float64)
+
+  def initialize(@sides : Sides)
+    @sides.clear if illegal?
   end
 
   def equilateral?
