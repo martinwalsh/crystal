@@ -48,10 +48,11 @@ module TestDSL
   # ```
   #
   # Resulting in
-  macro _expect_raises(type = ArugumentError, with_message = nil, &block)
+  macro _expect_raises(type = ArugumentError, with_message = nil, when = false, &block)
     {% PROPERTIES[:expect_raises_type] = type %}
     {% PROPERTIES[:expect_raises_trigger] = block.body || nil %}
-    {% PROPERTIES[:expect_raises_message] = with_message %}
+    {% PROPERTIES[:expect_raises_regex] = with_message %}
+    {% PROPERTIES[:expect_raises_when] = when.id %}
   end
 
   macro add_methods
@@ -71,12 +72,17 @@ module TestDSL
         "  end"
       end
     end
+
+    def _raise_is_expected?
+      {{ PROPERTIES[:expect_raises_when] }}
+    end
   end
 
-  # Including types should override the *should_raise?* method so that the generated
-  # *test_workload* method can determine when the *expect_raises" form of a unit test
-  # should be used and when applicable to the exercise.
+  # Including types may choose to override the *should_raise?* method in
+  # cases where the *when* argument to the *_expect_raises* macro is insufficient.
+  # This controls the output of *test_workload*, determining if the typical "should eq"
+  # stanza is used, or *expect_raises*.
   def should_raise?
-    false
+    _raise_is_expected?
   end
 end
