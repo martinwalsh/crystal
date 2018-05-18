@@ -176,6 +176,14 @@ describe "Forth" do
     Forth.evaluate(": + * ;3 4 +").should eq([12])
   end
 
+  pending "can use different words with the same name" do
+    Forth.evaluate(": foo 5 ;: bar foo ;: foo 6 ;bar foo").should eq([5, 6])
+  end
+
+  pending "can define word that uses word with the same name" do
+    Forth.evaluate(": foo 10 ;: foo foo 1 + ;foo").should eq([11])
+  end
+
   pending "cannot redefine numbers" do
     expect_raises(Exception) do
       Forth.evaluate(": 1 2 ;")

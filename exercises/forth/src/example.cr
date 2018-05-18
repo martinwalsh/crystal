@@ -162,12 +162,17 @@ class Forth
     next_token
     raise "Invalid method name" if token.type == :INT
     name = token.string_value.upcase
-    defs[name] = [] of Token
+    definition = [] of Token
     while next_token
       raise "Invalid Definition" if token.type == :EOF
       break if token.type == :";"
-      defs[name] << token
+      if defs[token.string_value.upcase]? && token.type == :WORD
+        definition += defs[token.string_value.upcase]
+      else
+        definition << token
+      end
     end
+    defs[name] = definition
   end
 
   private def pop_once(&block)
