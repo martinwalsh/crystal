@@ -245,6 +245,16 @@
       "topics": [
 
       ]
+    },
+    {
+      "uuid": "1599087a-7f4c-471b-9a9e-7a08475b8e58",
+      "slug": "all-your-base",
+      "core": false,
+      "unlocked_by": null,
+      "difficulty": 1,
+      "topics": [
+
+      ]
     }
   ],
   "foregone": [
