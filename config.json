@@ -255,6 +255,16 @@
       "topics": [
 
       ]
+    },
+    {
+      "uuid": "de886774-d29d-4017-9850-f7acd705e1fe",
+      "slug": "allergies",
+      "core": false,
+      "unlocked_by": null,
+      "difficulty": 1,
+      "topics": [
+
+      ]
     }
   ],
   "foregone": [
