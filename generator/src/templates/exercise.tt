@@ -5,7 +5,13 @@ require "./spec_helper"
 <%- end -%>
 
 describe "<%= test_class %>" do
+<%- if describe_method? -%>
+  describe "<%= describe_method %>" do
+<%- end -%>
 <%- cases.each do |test_case_or_group| -%>
-<%= test_case_or_group.indent(1) %>
+<%= test_case_or_group.indent(describe_method? ? 1 : 2) %>
+<%- end -%>
+<%- if describe_method? -%>
+  end
 <%- end -%>
 end

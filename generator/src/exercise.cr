@@ -57,6 +57,8 @@ module Exercise
     end
 
     delegate include_spec_helper, to: @cases.first
+    delegate describe_method, to: @cases.first
+    delegate describe_method?, to: @cases.first
 
     template_filename "exercise.tt"
   end
@@ -84,6 +86,8 @@ module Exercise
     delegate group_description, to: @cases.first
     delegate test_method, to: @cases.first
     delegate include_spec_helper, to: @cases.first
+    delegate describe_method, to: @cases.first
+    delegate describe_method?, to: @cases.first
 
     template_filename "test_group.tt"
   end
@@ -101,17 +105,36 @@ module Exercise
     property test_prefix : String = "pending"
     property group_description : String? = nil
     getter include_spec_helper : Bool = false
+    getter describe_method : String = ""
 
+    # Use of this macro in a `TestCase` including type alters the top-level exercise
+    # template, adding `require "./spec_helper"`, so that helper methods/macros (like
+    # *bonus* are available for use in the generated spec file.
     macro spec_helper
       getter include_spec_helper : Bool = true
     end
 
+    # Use of this macro with alter the *test_prefix* for unit tests matching
+    # the regex provided in the *on* argument.
     macro bonus_prefix(on = nil)
       {% if on %}
       def test_prefix
         description.match({{ on.id }}) ? "bonus" : @test_prefix
       end
       {% end %}
+    end
+
+    # Overrides the default *describe_method* (defaults to an empty string), and
+    # results in all unit tests, and test groups, being wrapped in a secondary
+    # `describe` block.
+    macro describe_method(method_name)
+      def describe_method
+        {{ method_name }}
+      end
+    end
+
+    def describe_method?
+      !describe_method.empty?
     end
 
     JSON.mapping({
