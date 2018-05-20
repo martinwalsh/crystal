@@ -1,5 +1,8 @@
 require "spec"
 require "../src/*"
+<%- if include_spec_helper -%>
+require "./spec_helper"
+<%- end -%>
 
 describe "<%= test_class %>" do
 <%- cases.each do |test_case_or_group| -%>

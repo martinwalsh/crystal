@@ -22,3 +22,17 @@ class TestTestCase
   end
 end
 
+class TestTestCaseWithBonus
+  include Exercise::TestCase(Int32, Int32)
+
+  def test_description
+    description
+  end
+
+  def test_workload
+    "whatever"
+  end
+
+  spec_helper
+  bonus_prefix on: /.+/
+end

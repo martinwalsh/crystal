@@ -56,6 +56,8 @@ module Exercise
       exercise.split('-').map(&.capitalize).join
     end
 
+    delegate include_spec_helper, to: @cases.first
+
     template_filename "exercise.tt"
   end
 
@@ -79,17 +81,9 @@ module Exercise
       cases.first.test_prefix = prefix
     end
 
-    # The method call to perform for this group of `TestCase` instances (effectively
-    # a pass-thru to the first test case in this `TestGroup`).
-    def test_method
-      cases.first.test_method
-    end
-
-    # The value used as the description of the encompassing "describe" for this group
-    # of `TestCase` instances (effectively a pass-thru to the first test case in this `TestGroup`).
-    def group_description
-      cases.first.group_description
-    end
+    delegate group_description, to: @cases.first
+    delegate test_method, to: @cases.first
+    delegate include_spec_helper, to: @cases.first
 
     template_filename "test_group.tt"
   end
@@ -106,6 +100,19 @@ module Exercise
 
     property test_prefix : String = "pending"
     property group_description : String? = nil
+    getter include_spec_helper : Bool = false
+
+    macro spec_helper
+      getter include_spec_helper : Bool = true
+    end
+
+    macro bonus_prefix(on = nil)
+      {% if on %}
+      def test_prefix
+        description.match({{ on.id }}) ? "bonus" : @test_prefix
+      end
+      {% end %}
+    end
 
     JSON.mapping({
       description: String,
@@ -126,6 +133,9 @@ module Exercise
     def test_method
       property.gsub(/([a-z])([A-Z])/, "\\1_\\2").downcase
     end
+
+    abstract def test_workload
+    abstract def test_description
 
     template_filename "test_case.tt"
   end

@@ -11,6 +11,9 @@ class AlphameticsTestCase
   _it description do
     "Alphametics.solve(\"#{input["puzzle"]}\").should eq(#{output})"
   end
+
+  spec_helper
+  bonus_prefix on: /puzzle with ten letters and 199 addends/
 end
 
 Generator.register :Alphametics

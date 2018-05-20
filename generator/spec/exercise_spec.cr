@@ -45,4 +45,10 @@ describe Exercise::Spec do
     spec = Exercise::Spec(TestTestCase).from_canonical(get_canonical("raises-error"))
     spec.to_s.should match(/expect_raises\(ArgumentError\)/)
   end
+
+  it "renders to valid rspec when spec_helper and/or bonus_prefix macros are used" do
+    spec = Exercise::Spec(TestTestCaseWithBonus).from_canonical(get_canonical("valid"))
+    spec.to_s.should match(/require "\.\/spec_helper"/)
+    spec.to_s.should match(/bonus "whatevs"/)
+  end
 end

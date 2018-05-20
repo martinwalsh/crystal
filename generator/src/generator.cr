@@ -4,6 +4,18 @@ require "./remote_data_file"
 
 # A `Generator` manages reading canonical-data and writing the corresponding spec file.
 module Generator
+  # Written only when the related `Exercise::Spec` instance's *include_spec_hepler* property
+  # is true. NOTE: In the future the content of spec_helper.cr may be rendered from a template
+  # if the extra complexity is needed.
+  SPEC_HELPER = <<-EOF
+  macro bonus(*args, &block)
+    pending({{ *args }}) do
+      {{ block.body }}
+    end
+  end
+
+  EOF
+
   # `Generator::Base` should be subclassed to provide exercise specific handling of
   # canonical-data and the resulting spec file.
   #
@@ -26,7 +38,14 @@ module Generator
     end
 
     def generate
-      File.write(test_file, to_s)
+      spec = Exercise::Spec(T).from_canonical(data)
+
+      # write the generated content of the spec file
+      File.write(test_file, spec.to_s)
+
+      # write out a spec helper, but only if the *spec_helper*
+      # macro is used in the related `TestCase` definition.
+      File.write(spec_helper, SPEC_HELPER) if spec.include_spec_helper
     end
 
     def to_s
@@ -37,8 +56,16 @@ module Generator
       {{ @type.stringify.gsub(/Generator/, "").gsub(/([a-z])([A-Z])/, "\\1-\\2").downcase }}
     end
 
+    private def spec_helper
+      "#{spec_path}/spec_helper.cr"
+    end
+
     private def test_file
-      File.expand_path("exercises/#{exercise}/spec/#{exercise.tr("-", "_")}_spec.cr", ROOTDIR)
+      "#{spec_path}/#{exercise.tr("-", "_")}_spec.cr"
+    end
+
+    private def spec_path
+      File.expand_path("exercises/#{exercise}/spec", ROOTDIR)
     end
 
     private def local_path
