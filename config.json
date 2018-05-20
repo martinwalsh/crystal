@@ -265,6 +265,16 @@
       "topics": [
 
       ]
+    },
+    {
+      "uuid": "023f3264-fad5-4b77-b93d-9448e210dab8",
+      "slug": "alphametics",
+      "core": false,
+      "unlocked_by": null,
+      "difficulty": 6,
+      "topics": [
+
+      ]
     }
   ],
   "foregone": [
