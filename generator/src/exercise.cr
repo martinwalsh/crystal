@@ -71,8 +71,9 @@ module Exercise
   class TestGroup(T)
     include Renderable
 
-    private getter parent : Spec(T)? = nil
-    protected property group : TestGroup(T)? = nil
+    getter parent : Spec(T)? = nil
+    property group : TestGroup(T)? = nil
+    property visible : Bool = true
 
     JSON.mapping({
       description: String,

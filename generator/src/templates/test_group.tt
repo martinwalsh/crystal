@@ -1,9 +1,9 @@
-<%- if has_describe_group? -%>
+<%- if has_describe_group? && visible -%>
 describe "<%= describe_group %>" do
 <%- end -%>
-<%- cases.each do |test_case| -%>
-<%= test_case.indent(has_describe_group? ? 1 : 0) %>
+<%- cases.each do |test_case_or_group| -%>
+<%= test_case_or_group.indent(has_describe_group? ? (visible ? 1 : 0) : 0) %>
 <%- end -%>
-<%- if has_describe_group? -%>
+<%- if has_describe_group? && visible -%>
 end
 <%- end -%>
