@@ -1,9 +1,9 @@
-<%- if group_description -%>
-describe "<%= group_description %>" do
+<%- if has_describe_group? -%>
+describe "<%= describe_group %>" do
 <%- end -%>
 <%- cases.each do |test_case| -%>
-<%= test_case.indent(group_description ? 1 : 0) %>
+<%= test_case.indent(has_describe_group? ? 1 : 0) %>
 <%- end -%>
-<%- if group_description -%>
+<%- if has_describe_group? -%>
 end
 <%- end -%>

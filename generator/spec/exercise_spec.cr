@@ -51,4 +51,16 @@ describe Exercise::Spec do
     spec.to_s.should match(/require "\.\/spec_helper"/)
     spec.to_s.should match(/bonus "whatevs"/)
   end
+
+  it "renders valid rspec when describe_contextual is used" do
+    spec = Exercise::Spec(TestTestCaseWithDescribeContextual).from_canonical(get_canonical("valid"))
+    spec.to_s.should match(/describe "\.woot" do/)
+  end
+
+  it "renders valid rspec when describe_group (and describe_contextual) is used" do
+    spec = Exercise::Spec(TestTestCaseWithDescribeGroup).from_canonical(get_canonical("group"))
+    spec.to_s.should match(/describe "#group1" do/)
+    spec.to_s.should match(/describe "#group2" do/)
+    spec.to_s.should match(/describe "\.wahoo" do/)
+  end
 end

@@ -31,10 +31,10 @@ module Exercise
     # and `TesCase` objects, and the easiest way to do that is to create an instance using
     # `Spec.from_canonical`.
     private def self.inject(instance)
-      # Set a reference to this Exercise instance for all TestGroup and Test instances.
+      # Set a reference to this Exercise instance for all
+      # subordinate `TestGroup` and `TestCase` instances, as applicable.
       instance.cases.map do |c|
         c.parent = instance
-        c.cases.map { |_c| _c.parent = instance } if c.responds_to? :cases
       end
 
       # Enable the first test case. This will pass through
@@ -57,8 +57,11 @@ module Exercise
     end
 
     delegate include_spec_helper, to: @cases.first
-    delegate describe_method, to: @cases.first
-    delegate describe_method?, to: @cases.first
+    delegate describe_contextual, to: @cases.first
+
+    private def has_describe_contextual?
+      !describe_contextual.empty?
+    end
 
     template_filename "exercise.tt"
   end
@@ -67,7 +70,8 @@ module Exercise
   class TestGroup(T)
     include Renderable
 
-    property parent : Spec(T)? = nil
+    private getter parent : Spec(T)? = nil
+    protected property group : TestGroup(T)? = nil
 
     JSON.mapping({
       description: String,
@@ -79,15 +83,26 @@ module Exercise
     # known to this `TestGroup` instance; it is used to enable only the first test
     # case (with "it"), while continuing to disable ("pending") all others during
     # spec rendering.
-    def test_prefix=(prefix)
+   def test_prefix=(prefix)
       cases.first.test_prefix = prefix
     end
 
-    delegate group_description, to: @cases.first
+   def parent=(instance)
+      @parent = instance
+      cases.each do |c|
+        c.parent = instance
+        c.group = self
+      end
+    end
+
     delegate test_method, to: @cases.first
     delegate include_spec_helper, to: @cases.first
-    delegate describe_method, to: @cases.first
-    delegate describe_method?, to: @cases.first
+    delegate describe_contextual, to: @cases.first
+    delegate describe_group, to: @cases.first
+
+    private def has_describe_group?
+      !describe_group.empty?
+    end
 
     template_filename "test_group.tt"
   end
@@ -100,12 +115,13 @@ module Exercise
 
     macro included
       property parent : Exercise::Spec({{ @type }})? = nil
+      property group : Exercise::TestGroup({{ @type }})? = nil
     end
 
     property test_prefix : String = "pending"
-    property group_description : String? = nil
     getter include_spec_helper : Bool = false
-    getter describe_method : String = ""
+    getter describe_contextual : String = ""
+    getter describe_group : String = ""
 
     # Use of this macro in a `TestCase` including type alters the top-level exercise
     # template, adding `require "./spec_helper"`, so that helper methods/macros (like
@@ -124,17 +140,34 @@ module Exercise
       {% end %}
     end
 
-    # Overrides the default *describe_method* (defaults to an empty string), and
+    # Overrides the default *describe_contextual* (defaults to an empty string), and
     # results in all unit tests, and test groups, being wrapped in a secondary
     # `describe` block.
-    macro describe_method(method_name)
-      def describe_method
+    macro describe_contextual(method_name)
+      def describe_contextual
         {{ method_name }}
       end
     end
 
-    def describe_method?
-      !describe_method.empty?
+    # Overrides the default *describe_group* (defaults to an empty string), and
+    # results in test groups, of type `TestGroup`, being wrapped in a secondary
+    # `describe` block.
+    macro describe_group(group_message)
+      def describe_group
+        describe_group do
+          {{ group_message }}
+        end
+      end
+    end
+
+    protected def describe_group
+      if @group
+        # Without `not_nil!`, the yielded block will be evaluated
+        # in the context of this instance and not the group's.
+        with @group.not_nil! yield
+      else
+        raise "Unable to lookup describe_group. No `TestGroup` available for #{self.inspect}."
+      end
     end
 
     JSON.mapping({
@@ -153,7 +186,7 @@ module Exercise
 
     # A wrapper around the *property* attribute found in this exercise's canonical-data.json,
     # properly downcased and underscored. Can be overridden in subclasses, if desired.
-    def test_method
+    private def test_method
       property.gsub(/([a-z])([A-Z])/, "\\1_\\2").downcase
     end
 

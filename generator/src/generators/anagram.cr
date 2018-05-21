@@ -11,7 +11,7 @@ class AnagramTestCase
   include TestDSL
   include Exercise::TestCase(Input, Array(String))
 
-  describe_method ".find"
+  describe_contextual ".find"
 
   def output
     expected.empty? ? "[] of String" : expected

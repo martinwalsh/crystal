@@ -7,6 +7,12 @@
       "cases": [
         {"description": "test1", "property": "one", "input": 1, "expected": 1}
       ]
+    },
+    {
+      "description": "group2",
+      "cases": [
+        {"description": "test2", "property": "two", "input": 1, "expected": 1}
+      ]
     }
   ]
 }

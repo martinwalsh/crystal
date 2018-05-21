@@ -5,13 +5,13 @@ require "./spec_helper"
 <%- end -%>
 
 describe "<%= test_class %>" do
-<%- if describe_method? -%>
-  describe "<%= describe_method %>" do
+<%- if has_describe_contextual? -%>
+  describe "<%= describe_contextual %>" do
 <%- end -%>
 <%- cases.each do |test_case_or_group| -%>
-<%= test_case_or_group.indent(describe_method? ? 2 : 1) %>
+<%= test_case_or_group.indent(has_describe_contextual? ? 2 : 1) %>
 <%- end -%>
-<%- if describe_method? -%>
+<%- if has_describe_contextual? -%>
   end
 <%- end -%>
 end

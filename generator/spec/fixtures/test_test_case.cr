@@ -36,3 +36,32 @@ class TestTestCaseWithBonus
   spec_helper
   bonus_prefix on: /.+/
 end
+
+class TestTestCaseWithDescribeContextual
+  include Exercise::TestCase(Int32, Int32)
+
+  def test_description
+    description
+  end
+
+  def test_workload
+    "whatever"
+  end
+
+  describe_contextual ".woot"
+end
+
+class TestTestCaseWithDescribeGroup
+  include Exercise::TestCase(Int32, Int32)
+
+  def test_description
+    description
+  end
+
+  def test_workload
+    "whatever"
+  end
+
+  describe_contextual ".wahoo"
+  describe_group "##{description}"
+end
