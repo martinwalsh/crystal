@@ -1,3 +1,5 @@
+EXERCISE_UNDERSCORED := $(subst -,_,$(EXERCISE))
+
 IGNOREDIRS := "^(\.git|.crystal|docs|bin|img|script)$$"
 EXERCISESDIR ?= exercises
 EXERCISES = $(shell find exercises -maxdepth 1 -mindepth 1 -type d | cut -d'/' -f2 | sort | grep -Ev $(IGNOREDIRS))
@@ -84,18 +86,18 @@ else
 	@echo "=> creating boilerplate for $(EXERCISE)"
 	mkdir -p $(EXERCISESRCDIR) $(EXERCISESPECDIR)
 	@echo "-> creating source files for $(EXERCISE)"
-	@[ ! -e $(EXERCISESRCDIR)/$(EXERCISE).cr ] || (echo 'ERROR: $(EXERCISESRCDIR)/$(EXERCISE).cr already exists!'; exit 1)
-	@echo '# Please implement your solution to $(EXERCISE) in this file' > $(EXERCISESRCDIR)/$(EXERCISE).cr
+	@[ ! -e $(EXERCISESRCDIR)/$(EXERCISE_UNDERSCORED).cr ] || (echo 'ERROR: $(EXERCISESRCDIR)/$(EXERCISE_UNDERSCORED).cr already exists!'; exit 1)
+	@echo '# Please implement your solution to $(EXERCISE) in this file' > $(EXERCISESRCDIR)/$(EXERCISE_UNDERSCORED).cr
 	@[ ! -e $(EXERCISESRCDIR)/example.cr ] || (echo 'ERROR: $(EXERCISESRCDIR)/example.cr already exists!'; exit 1)
 	@echo '# Please provide an example implementation for the solution to $(EXERCISE) in this file' >  $(EXERCISESRCDIR)/example.cr
 	@echo "-> creating README.md for $(EXERCISE)"
 	bin/configlet generate . --only=$(EXERCISE)
 	@echo "-> creating generator boilerplate for $(EXERCISE)"
-	@[ ! -e $(GENERATORSDIR)/$(EXERCISE).cr ] || (echo 'ERROR: $(EXERCISESRCDIR)/$(EXERCISE).cr already exists!'; exit 1)
-	@echo "$$GENERATOR_TEMPLATE" > $(GENERATORSDIR)/$(subst -,_,$(EXERCISE)).cr
+	@[ ! -e $(GENERATORSDIR)/$(EXERCISE_UNDERSCORED).cr ] || (echo 'ERROR: $(EXERCISESRCDIR)/$(EXERCISE_UNDERSCORED).cr already exists!'; exit 1)
+	@echo "$$GENERATOR_TEMPLATE" > $(GENERATORSDIR)/$(EXERCISE_UNDERSCORED).cr
 	@echo "$$EXERCISE_JSON"
 	@echo "=> exercise generation complete for $(EXERCISE)"
-	@echo "You may now edit $(GENERATORSDIR)/$(subst -,_,$(EXERCISE)).cr as necessary and run make generate-exercise GENERATOR=$(EXERCISE)."
+	@echo "You may now edit $(GENERATORSDIR)/$(EXERCISE_UNDERSCORED).cr as necessary and run make generate-exercise GENERATOR=$(EXERCISE)."
 endif
 
 test-exercise:
