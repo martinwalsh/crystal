@@ -3,9 +3,16 @@ module Atbash
   extend self
 
   def encode(message : String) : String
+    add_spaces(process(message))
+  end
+
+  def decode(message : String) : String
+    process(message).join
+  end
+
+  private def process(message : String) : Array(Char)
     message = sanitize_message(message)
-    enarr = map_chars(message)
-    add_spaces(enarr)
+    map_chars(message)
   end
 
   private def sanitize_message(message : String) : String
