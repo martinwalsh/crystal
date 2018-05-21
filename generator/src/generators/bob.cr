@@ -12,8 +12,10 @@ class BobTestCase
     input.heyBob.inspect
   end
 
+  describe_contextual "#hey"
+
   _it "responds to #{description}" do
-    "Bob.#{test_method}(#{escaped}).should eq(\"#{expected}\")"
+    "Bob.hey(#{escaped}).should eq #{expected.inspect}"
   end
 end
 

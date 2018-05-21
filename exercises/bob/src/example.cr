@@ -1,5 +1,5 @@
 class Bob
-  def self.response(string : String)
+  def self.hey(string : String)
     case
     when self.silence?(string)
       "Fine. Be that way!"
