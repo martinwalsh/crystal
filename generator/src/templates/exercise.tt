@@ -9,7 +9,7 @@ describe "<%= test_class %>" do
   describe "<%= describe_method %>" do
 <%- end -%>
 <%- cases.each do |test_case_or_group| -%>
-<%= test_case_or_group.indent(describe_method? ? 1 : 2) %>
+<%= test_case_or_group.indent(describe_method? ? 2 : 1) %>
 <%- end -%>
 <%- if describe_method? -%>
   end

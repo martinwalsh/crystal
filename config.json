@@ -275,6 +275,16 @@
       "topics": [
 
       ]
+    },
+    {
+      "uuid": "ee294793-fd66-4d22-91e3-0585b827320d",
+      "slug": "armstrong-numbers",
+      "core": false,
+      "unlocked_by": null,
+      "difficulty": 1,
+      "topics": [
+
+      ]
     }
   ],
   "foregone": [
