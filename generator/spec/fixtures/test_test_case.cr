@@ -33,6 +33,8 @@ class TestTestCaseWithBonus
     "whatever"
   end
 
+  test_class "MyTestClass"
+
   spec_helper
   bonus_prefix on: /.+/
 end

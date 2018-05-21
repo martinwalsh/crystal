@@ -52,12 +52,13 @@ module Exercise
     end
 
     # Returns a CamelCase version of the exercise name for use in a `TestCase`.
-    def test_class
+    def class_name
       exercise.split('-').map(&.capitalize).join
     end
 
     delegate include_spec_helper, to: @cases.first
     delegate describe_contextual, to: @cases.first
+    delegate test_class, to: @cases.first
 
     private def has_describe_contextual?
       !describe_contextual.empty?
@@ -99,6 +100,7 @@ module Exercise
     delegate include_spec_helper, to: @cases.first
     delegate describe_contextual, to: @cases.first
     delegate describe_group, to: @cases.first
+    delegate test_class, to: @cases.first
 
     private def has_describe_group?
       !describe_group.empty?
@@ -178,10 +180,18 @@ module Exercise
       expected:    Out,
     })
 
-    # Returns the *test_class* value for the related `Spec` object; represents the
+    # Returns the *class_name* value for the related `Spec` object; represents the
     # name of the class under test (e.g. hello-world -> HelloWorld).
     def test_class
-      "#{parent.try &.test_class}"
+      "#{parent.try &.class_name}"
+    end
+
+    # overrides the default *test_class* method, which by default returns
+    # the `Spec` object's *class_name* value.
+    macro test_class(value)
+      def test_class
+        {{ value }}
+      end
     end
 
     # A wrapper around the *property* attribute found in this exercise's canonical-data.json,

@@ -52,6 +52,11 @@ describe Exercise::Spec do
     spec.to_s.should match(/bonus "whatevs"/)
   end
 
+  it "can override its parent's class name" do
+    spec = Exercise::Spec(TestTestCaseWithBonus).from_canonical(get_canonical("valid"))
+    spec.to_s.should match(/describe "MyTestClass" do/)
+  end
+
   it "renders valid rspec when describe_contextual is used" do
     spec = Exercise::Spec(TestTestCaseWithDescribeContextual).from_canonical(get_canonical("valid"))
     spec.to_s.should match(/describe "\.woot" do/)
