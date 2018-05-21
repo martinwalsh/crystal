@@ -285,6 +285,16 @@
       "topics": [
 
       ]
+    },
+    {
+      "uuid": "a709b62e-9b3e-4eb4-80e0-d469ac5d9c93",
+      "slug": "beer-song",
+      "core": false,
+      "unlocked_by": null,
+      "difficulty": 1,
+      "topics": [
+
+      ]
     }
   ],
   "foregone": [
